@@ -16,7 +16,7 @@ const projects = [
     eyebrow: "Portable game library",
     description:
       "A local-first game catalog and launcher with a managed portable root, SQLite persistence, backups, and a review-gated archive intake pipeline.",
-    proof: "Immutable v0.3.2 release · SBOM · provenance attestation",
+    proof: "Immutable Windows release · SBOM · provenance attestation",
     stack: "React · Rust/Tauri · SQLite",
     image: "/projects/gamevault.jpg",
     alt: "GameVault portable game library",
