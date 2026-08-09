@@ -16,6 +16,7 @@ for (const relativePath of [
   "Nouraldin-Farge-Resume.pdf",
   "favicon.svg",
   "og.png",
+  "og-v2.png",
   "_headers",
   ".assetsignore",
   ".vite",
@@ -30,6 +31,7 @@ for (const relativePath of [
   "Nouraldin-Farge-Resume.pdf",
   "favicon.svg",
   "og.png",
+  "og-v2.png",
 ]) {
   await cp(
     path.join(root, "dist", "client", relativePath),
@@ -40,7 +42,11 @@ for (const relativePath of [
 
 const workerUrl = `${pathToFileURL(path.join(root, "dist", "server", "index.js")).href}?static-export=${Date.now()}`;
 const worker = (await import(workerUrl)).default;
-const response = await worker.fetch(new Request(`${canonicalUrl}/`), {}, {});
+const response = await worker.fetch(
+  new Request(`${canonicalUrl}/`),
+  {},
+  { waitUntil() {}, passThroughOnException() {} },
+);
 
 if (!response.ok) {
   throw new Error(`Static render failed with HTTP ${response.status}`);

@@ -22,6 +22,11 @@ test("server-renders the finished portfolio", async () => {
   assert.match(html, /Day-Trading Teacher/);
   assert.match(html, /Research Studio/);
   assert.match(html, /AI-ASSISTED DEVELOPMENT/);
+  assert.match(html, /Skip to main content/);
+  assert.match(html, /id="main-content"/);
+  assert.match(html, /rel="canonical" href="https:\/\/nouraldinfarge\.github\.io"/);
+  assert.match(html, /aria-label="View source for DrawScope"/);
+  assert.match(html, /og-v2\.png/);
   assert.match(html, /v0\.6\.5/);
   assert.match(html, /v0\.3\.5/);
   assert.match(html, /v0\.32\.6/);

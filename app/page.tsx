@@ -100,7 +100,9 @@ const principles = [
 
 export default function Home() {
   return (
-    <main>
+    <>
+      <a className="skip-link" href="#main-content">Skip to main content</a>
+      <main id="main-content">
       <header className="site-header">
         <a className="wordmark" href="#top" aria-label="Nouraldin Farge home">NF<span>.</span></a>
         <nav aria-label="Primary navigation">
@@ -152,9 +154,15 @@ export default function Home() {
             <article className="project-card" key={project.name}>
               <div className="project-image-wrap">
                 <span className="project-index">0{index + 1}</span>
-                {/* vinext serves these static portfolio assets directly; native img avoids its unsupported image optimizer. */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={project.image} alt={project.alt} loading={index === 0 ? "eager" : "lazy"} />
+                <a
+                  className="project-image-link"
+                  href={project.links[0][1]}
+                  aria-label={`${project.links[0][0]} for ${project.name}`}
+                >
+                  {/* vinext serves these static portfolio assets directly; native img avoids its unsupported image optimizer. */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={project.image} alt={project.alt} loading={index === 0 ? "eager" : "lazy"} />
+                </a>
               </div>
               <div className="project-copy">
                 <div className="project-meta"><span>{project.availability}</span><strong>{project.version}</strong></div>
@@ -206,6 +214,7 @@ export default function Home() {
       </section>
 
       <footer><span>© 2026 Nouraldin Farge</span><span>Desktop · Local-first · Evidence-backed · Human-reviewed</span></footer>
-    </main>
+      </main>
+    </>
   );
 }
