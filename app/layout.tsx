@@ -15,11 +15,15 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(origin),
     title: "Nouraldin Farge — Desktop & Local-First Software Engineer",
-    description: "Portable Windows products, local-first data systems, explicit safety boundaries, and independently verifiable releases.",
+    description: "Three public Windows releases and one source-free engineering case study, with inspectable code, safety boundaries, and release evidence.",
     authors: [{ name: "Nouraldin Farge" }],
+    creator: "Nouraldin Farge",
+    keywords: ["software engineer", "Windows desktop", "local-first", "React", "Rust", "Tauri", "Electron", "SQLite", "release engineering"],
+    alternates: { canonical: origin },
+    robots: { index: true, follow: true },
     openGraph: {
       title: "Nouraldin Farge — Software Engineer",
-      description: "Desktop software that keeps people in control.",
+      description: "Desktop and local-first systems with proof at every boundary.",
       url: origin,
       siteName: "Nouraldin Farge",
       type: "website",
@@ -28,17 +32,33 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: "Nouraldin Farge — Software Engineer",
-      description: "Desktop software that keeps people in control.",
+      description: "Desktop and local-first systems with proof at every boundary.",
       images: [`${origin}/og.png`],
     },
   };
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Nouraldin Farge",
+    jobTitle: "Software Engineer",
+    url: "https://nouraldin-farge-portfolio.site",
+    email: "mailto:nouraldinfarge@gmail.com",
+    sameAs: [
+      "https://github.com/NouraldinFarge",
+      "https://linkedin.com/in/nouraldin-farge",
+    ],
+    knowsAbout: ["Windows desktop software", "local-first systems", "Rust", "Tauri", "Electron", "React", "SQLite", "release engineering"],
+  };
+
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+        {children}
+      </body>
     </html>
   );
 }
-
