@@ -143,7 +143,7 @@ export default function Home() {
 
       <section className="work-section" id="work">
         <div className="section-heading">
-          <div><p className="kicker"><span /> Selected work · verified August 2026</p><h2>Products with proof attached.</h2></div>
+          <div><p className="kicker"><span /> Projects · verified August 2026</p><h2>Products with proof attached.</h2></div>
           <p>Start with the outcome, then follow exact links to the implementation, immutable release, methodology, or bounded public evidence.</p>
         </div>
 
