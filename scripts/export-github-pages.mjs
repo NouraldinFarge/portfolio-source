@@ -69,6 +69,7 @@ html = html
   .replace(/<link\b[^>]*rel=["']modulepreload["'][^>]*\/?\s*>/gi, "")
   .replace(/\sdata-rsc-css-href=["'][^"']*["']/gi, "")
   .replace(/\sdata-precedence=["'][^"']*["']/gi, "")
+  .replace(/url\((?:file:\/\/\/)?[^)]*?\.vinext\/fonts\/([^)]+)\)/gi, "url(/assets/_vinext_fonts/$1)")
   .replaceAll("http://localhost", canonicalUrl)
   .replaceAll("https://nouraldin-farge-portfolio.awdsqecxzr.chatgpt.site", canonicalUrl);
 
@@ -79,8 +80,9 @@ structuredDataScripts.forEach((script, index) => {
 if (!html.includes("I build Windows software")) {
   throw new Error("The static export is missing the portfolio hero content.");
 }
-if (html.includes("localhost") || html.includes("_rsc")) {
-  throw new Error("The static export still contains development or server-only references.");
+if (html.includes("localhost") || html.includes("_rsc") || html.includes(".vinext/fonts") || /(?:^|[\s"'(])[A-Za-z]:\//.test(html)) {
+  const unsafeReferences = html.match(/[^\s"']*(?:localhost|_rsc|\.vinext\/fonts|(?:^|[\s"'(])[A-Za-z]:\/)[^\s"']*/g) ?? [];
+  throw new Error(`The static export still contains development or server-only references: ${unsafeReferences.slice(0, 5).join(", ")}`);
 }
 
 await writeFile(path.join(output, "index.html"), html, "utf8");
