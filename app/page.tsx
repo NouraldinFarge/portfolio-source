@@ -16,7 +16,7 @@ const projects = [
     alt: "DrawScope verified project snapshot showing archive, research, and evaluation evidence",
     links: [
       ["View source", "https://github.com/NouraldinFarge/drawscope"],
-      ["Get v0.6.5", "https://github.com/NouraldinFarge/drawscope/releases/tag/v0.6.5"],
+      ["Download v0.6.5", "https://github.com/NouraldinFarge/drawscope/releases/tag/v0.6.5"],
       ["Read methodology", "https://github.com/NouraldinFarge/drawscope/blob/main/docs/METHODOLOGY.md"],
     ],
   },
@@ -37,7 +37,7 @@ const projects = [
     alt: "GameVault portable library home screen using synthetic games and artwork",
     links: [
       ["View source", "https://github.com/NouraldinFarge/gamevault"],
-      ["Get v0.3.5", "https://github.com/NouraldinFarge/gamevault/releases/tag/v0.3.5"],
+      ["Download v0.3.5", "https://github.com/NouraldinFarge/gamevault/releases/tag/v0.3.5"],
       ["Review safety model", "https://github.com/NouraldinFarge/gamevault#safety-model"],
     ],
   },
@@ -58,7 +58,7 @@ const projects = [
     alt: "Day-Trading Teacher overview showing the lesson, replay, and journal learning loop",
     links: [
       ["View source", "https://github.com/NouraldinFarge/day-trading-teacher"],
-      ["Get v0.32.6", "https://github.com/NouraldinFarge/day-trading-teacher/releases/tag/v0.32.6"],
+      ["Download v0.32.6", "https://github.com/NouraldinFarge/day-trading-teacher/releases/tag/v0.32.6"],
       ["Take the project tour", "https://github.com/NouraldinFarge/day-trading-teacher#five-minute-project-tour"],
     ],
   },
@@ -67,7 +67,7 @@ const projects = [
     version: "alpha.21",
     availability: "Source-free case study",
     description:
-      "A guarded AI-assisted workflow for enriching a Chinese/English short-drama catalog while keeping source data read-only, model output untrusted, and every applied result reviewable.",
+      "A guarded AI-assisted workflow for enriching a bilingual short-drama catalog while keeping source data read-only, model output untrusted, and every applied result reviewable.",
     evidence: [
       "Read-only snapshot → explicit working copy → versioned review staging",
       "Batches of five or fewer with identity, schema, evidence, and bilingual quality gates",
@@ -75,7 +75,7 @@ const projects = [
     ],
     ownership: "Extraction architecture · trust boundaries · validation strategy · licensing boundary · release decision",
     stack: "Electron · React · TypeScript · Express · SQLite",
-    image: "/projects/research-studio.png",
+    image: "/projects/research-studio.webp",
     alt: "Research Studio workflow from a read-only Chinese and English catalog to a reviewed recoverable export",
     links: [
       ["Read case study", "https://github.com/NouraldinFarge/research-studio-case-study"],
@@ -102,17 +102,17 @@ export default function Home() {
   return (
     <>
       <a className="skip-link" href="#main-content">Skip to main content</a>
-      <main id="main-content">
       <header className="site-header">
         <a className="wordmark" href="#top" aria-label="Nouraldin Farge home">NF<span>.</span></a>
         <nav aria-label="Primary navigation">
-          <a href="#work">Work</a>
+          <a href="#work">Projects</a>
           <a href="#ownership">Ownership</a>
           <a href="#contact">Contact</a>
         </nav>
-        <a className="header-resume" href="/Nouraldin-Farge-Resume.pdf">Résumé <span aria-hidden="true">↓</span></a>
+        <a className="header-resume" href="/Nouraldin-Farge-Resume.pdf" download="Nouraldin-Farge-Resume.pdf">Résumé <span aria-hidden="true">↓</span></a>
       </header>
 
+      <main id="main-content" tabIndex={-1}>
       <section className="hero" id="top">
         <div className="hero-copy">
           <p className="kicker"><span /> Chicago, Illinois · Open to software engineering roles</p>
@@ -124,7 +124,7 @@ export default function Home() {
           </p>
           <div className="hero-actions">
             <a className="button primary" href="#work">Review shipped work</a>
-            <a className="button secondary" href="/Nouraldin-Farge-Resume.pdf">Download résumé <span aria-hidden="true">↓</span></a>
+            <a className="button secondary" href="/Nouraldin-Farge-Resume.pdf" download="Nouraldin-Farge-Resume.pdf">Download résumé <span aria-hidden="true">↓</span></a>
             <a className="button text-button" href="https://github.com/NouraldinFarge">GitHub <span aria-hidden="true">↗</span></a>
           </div>
         </div>
@@ -145,7 +145,7 @@ export default function Home() {
 
       <section className="work-section" id="work">
         <div className="section-heading">
-          <div><p className="kicker"><span /> Projects · verified August 2026</p><h2>Products with proof attached.</h2></div>
+          <div><p className="kicker"><span /> Projects · verified August 2026</p><h2>Projects with proof attached.</h2></div>
           <p>Start with the outcome, then follow exact links to the implementation, immutable release, methodology, or bounded public evidence.</p>
         </div>
 
@@ -161,7 +161,7 @@ export default function Home() {
                 >
                   {/* vinext serves these static portfolio assets directly; native img avoids its unsupported image optimizer. */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={project.image} alt={project.alt} loading={index === 0 ? "eager" : "lazy"} />
+                  <img src={project.image} alt={project.alt} loading="lazy" decoding="async" />
                 </a>
               </div>
               <div className="project-copy">
@@ -209,12 +209,11 @@ export default function Home() {
         <div className="contact-actions">
           <a className="button primary" href="mailto:nouraldinfarge@gmail.com">Email Nouraldin</a>
           <a className="button secondary" href="https://linkedin.com/in/nouraldin-farge">LinkedIn <span aria-hidden="true">↗</span></a>
-          <a className="button secondary" href="/Nouraldin-Farge-Resume.pdf">Download résumé <span aria-hidden="true">↓</span></a>
+          <a className="button secondary" href="/Nouraldin-Farge-Resume.pdf" download="Nouraldin-Farge-Resume.pdf">Download résumé <span aria-hidden="true">↓</span></a>
         </div>
       </section>
-
-      <footer><span>© 2026 Nouraldin Farge</span><span>Desktop · Local-first · Evidence-backed · Human-reviewed</span></footer>
       </main>
+      <footer><span>© 2026 Nouraldin Farge</span><span>Desktop · Local-first · Evidence-backed · Human-reviewed</span></footer>
     </>
   );
 }

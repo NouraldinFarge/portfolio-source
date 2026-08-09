@@ -1,10 +1,15 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 const publicOrigin = "https://nouraldinfarge.github.io";
+
+export const viewport: Viewport = {
+  colorScheme: "light",
+  themeColor: "#f2f3e9",
+};
 
 export function generateMetadata(): Metadata {
   return {
@@ -14,6 +19,10 @@ export function generateMetadata(): Metadata {
     authors: [{ name: "Nouraldin Farge" }],
     creator: "Nouraldin Farge",
     keywords: ["software engineer", "Windows desktop", "local-first", "AI-assisted software development", "React", "Rust", "Tauri", "Electron", "SQLite", "release engineering"],
+    icons: {
+      icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+      shortcut: "/favicon.svg",
+    },
     alternates: { canonical: publicOrigin },
     robots: { index: true, follow: true },
     openGraph: {

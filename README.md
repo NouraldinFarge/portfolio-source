@@ -19,3 +19,19 @@ npm test
 ```
 
 `npm test` builds the production artifact and verifies the rendered portfolio content.
+
+## GitHub Pages export
+
+Build and export a script-free static copy with:
+
+```bash
+npm run export:pages
+```
+
+Pass a destination after `--` when publishing into a separate Pages repository:
+
+```bash
+npm run export:pages -- ../path-to-pages-repository
+```
+
+The exporter keeps only referenced styles and fonts, copies the public portfolio assets, and generates a dedicated noindex 404 page.

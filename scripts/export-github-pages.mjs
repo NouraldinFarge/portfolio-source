@@ -17,6 +17,8 @@ for (const relativePath of [
   "favicon.svg",
   "og.png",
   "og-v2.png",
+  "robots.txt",
+  "sitemap.xml",
   "_headers",
   ".assetsignore",
   ".vite",
@@ -26,12 +28,8 @@ for (const relativePath of [
 }
 
 for (const relativePath of [
-  "assets",
-  "projects",
-  "Nouraldin-Farge-Resume.pdf",
-  "favicon.svg",
-  "og.png",
-  "og-v2.png",
+  "robots.txt",
+  "sitemap.xml",
 ]) {
   await cp(
     path.join(root, "dist", "client", relativePath),
@@ -77,6 +75,72 @@ structuredDataScripts.forEach((script, index) => {
   html = html.replace(`__STRUCTURED_DATA_${index}__`, script.replaceAll("https://nouraldin-farge-portfolio.awdsqecxzr.chatgpt.site", canonicalUrl));
 });
 
+function collectStaticReferences(content, sourcePath = "index.html") {
+  const references = new Set();
+
+  if (!sourcePath.endsWith(".css")) {
+    for (const match of content.matchAll(/(?:^|["'(])\/([^"'()\s<>?#]+)(?:[?#][^"'()\s<>]*)?/g)) {
+      if (!match[1].includes("..")) {
+        references.add(match[1]);
+      }
+    }
+    for (const match of content.matchAll(/https:\/\/nouraldinfarge\.github\.io\/([^"'()\s<>?#]+)(?:[?#][^"'()\s<>]*)?/g)) {
+      if (!match[1].includes("..")) {
+        references.add(match[1]);
+      }
+    }
+  }
+
+  if (sourcePath.endsWith(".css")) {
+    for (const match of content.matchAll(/url\(\s*["']?([^"')\s]+)["']?\s*\)/g)) {
+      const assetUrl = match[1];
+      if (assetUrl.startsWith("data:") || assetUrl.startsWith("http:") || assetUrl.startsWith("https:") || assetUrl.startsWith("#")) {
+        continue;
+      }
+
+      const resolved = assetUrl.startsWith("/")
+        ? assetUrl.slice(1)
+        : path.posix.normalize(path.posix.join(path.posix.dirname(sourcePath), assetUrl));
+      if (!resolved.includes("..")) {
+        references.add(resolved);
+      }
+    }
+  }
+
+  return references;
+}
+
+const pendingAssets = [...collectStaticReferences(html)];
+const copiedAssets = new Set();
+
+while (pendingAssets.length > 0) {
+  const relativePath = pendingAssets.shift();
+  if (!relativePath || copiedAssets.has(relativePath)) {
+    continue;
+  }
+  if (relativePath.includes("..") || path.isAbsolute(relativePath)) {
+    throw new Error(`Refusing to copy unsafe generated asset path: ${relativePath}`);
+  }
+  if (relativePath.endsWith(".js")) {
+    throw new Error(`The static HTML unexpectedly references an executable bundle: ${relativePath}`);
+  }
+
+  const sourcePath = path.join(root, "dist", "client", relativePath);
+  const destinationPath = path.join(output, relativePath);
+  await mkdir(path.dirname(destinationPath), { recursive: true });
+  await cp(sourcePath, destinationPath);
+  copiedAssets.add(relativePath);
+
+  if (relativePath.endsWith(".css")) {
+    const css = await readFile(sourcePath, "utf8");
+    for (const reference of collectStaticReferences(css, relativePath)) {
+      if (!copiedAssets.has(reference)) {
+        pendingAssets.push(reference);
+      }
+    }
+  }
+}
+
 if (!html.includes("I build Windows software")) {
   throw new Error("The static export is missing the portfolio hero content.");
 }
@@ -85,8 +149,25 @@ if (html.includes("localhost") || html.includes("_rsc") || html.includes(".vinex
   throw new Error(`The static export still contains development or server-only references: ${unsafeReferences.slice(0, 5).join(", ")}`);
 }
 
+const bodyOpeningTag = html.match(/<body\b[^>]*>/i)?.[0] ?? "<body>";
+const notFoundHtml = html
+  .replace(/<title>[\s\S]*?<\/title>/i, "<title>Page not found — Nouraldin Farge</title>")
+  .replace(/<meta\s+name=["']description["'][^>]*>/i, '<meta name="description" content="The requested page could not be found. Return to Nouraldin Farge\'s software engineering portfolio."/>')
+  .replace(/<meta\s+name=["']robots["'][^>]*>/i, '<meta name="robots" content="noindex, follow"/>')
+  .replace(/<link\s+rel=["']canonical["'][^>]*>/i, "")
+  .replace(/<meta\s+property=["']og:[^>]+>/gi, "")
+  .replace(/<meta\s+name=["']twitter:[^>]+>/gi, "")
+  .replace(
+    /<body\b[^>]*>[\s\S]*<\/body>/i,
+    `${bodyOpeningTag}<main id="main-content" class="not-found-page" tabindex="-1"><p class="kicker"><span></span>404 · page not found</p><h1>That page doesn’t exist.</h1><p>The address may have changed, or the link may be incomplete. The engineering portfolio is still available from the home page.</p><a class="button primary" href="/">Return home</a></main><footer><span>© 2026 Nouraldin Farge</span><span>Desktop · Local-first · Evidence-backed · Human-reviewed</span></footer></body>`,
+  );
+
+if (notFoundHtml === html || !notFoundHtml.includes('content="noindex, follow"') || !notFoundHtml.includes("Return home")) {
+  throw new Error("The static export did not generate a valid noindex 404 page.");
+}
+
 await writeFile(path.join(output, "index.html"), html, "utf8");
-await writeFile(path.join(output, "404.html"), html, "utf8");
+await writeFile(path.join(output, "404.html"), notFoundHtml, "utf8");
 await writeFile(path.join(output, ".nojekyll"), "", "utf8");
 
 const exportedHtml = await readFile(path.join(output, "index.html"), "utf8");
