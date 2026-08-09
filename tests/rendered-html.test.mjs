@@ -37,6 +37,10 @@ test("server-renders the finished portfolio", async () => {
   assert.match(html, /v0\.6\.5/);
   assert.match(html, /v0\.3\.5/);
   assert.match(html, /v0\.32\.6/);
+  assert.match(html, /v0\.1\.0-alpha\.21/);
+  assert.match(html, /bilingual Chinese-and-English/);
+  assert.match(html, /31,521 series and 2,242,170 episodes/);
+  assert.doesNotMatch(html, /<strong>alpha\.21<\/strong>|Chinese and English catalog/);
   assert.match(html, /Download v0\.6\.5/);
   assert.match(html, /Download v0\.3\.5/);
   assert.match(html, /Download v0\.32\.6/);
