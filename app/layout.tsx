@@ -44,7 +44,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     "@type": "Person",
     name: "Nouraldin Farge",
     jobTitle: "Software Engineer",
-    url: "https://nouraldin-farge-portfolio.site",
+    url: "https://nouraldinfarge.github.io",
     email: "mailto:nouraldinfarge@gmail.com",
     sameAs: [
       "https://github.com/NouraldinFarge",
