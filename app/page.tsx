@@ -64,23 +64,23 @@ const projects = [
   },
   {
     name: "Research Studio",
-    version: "v0.1.0-alpha.21",
+    version: "v0.1.0-alpha.24",
     availability: "Source-free case study",
     description:
-      "A guarded AI-assisted workflow for enriching a bilingual Chinese-and-English short-drama catalog while keeping source data read-only, model output untrusted, and every applied result reviewable.",
+      "A guarded AI-assisted workflow that keeps source data read-only, stages untrusted model output, requires human approval, and exports only versioned approved metadata.",
     evidence: [
-      "31,521 series and 2,242,170 episodes behind a read-only snapshot, explicit working copy, and versioned review staging",
-      "Batches of five or fewer with identity, schema, evidence, and bilingual quality gates",
-      "Private build verified against Electron/Node ABI drift, named-pipe transport, and rollback",
+      "31,521 series and 2,242,170 episodes verified without changing the source database hash",
+      "Evidence-first prompt v3, canonical bilingual tags, staged drafts, and explicit approval",
+      "One-title pilot, two-title campaign batches, private named pipe, native ABI gate, and rollback",
     ],
-    ownership: "Extraction architecture · trust boundaries · validation strategy · licensing boundary · release decision",
+    ownership: "Product direction · extraction architecture · trust boundaries · prompt/eval strategy · release approval",
     stack: "Electron · React · TypeScript · Express · SQLite",
     image: "/projects/research-studio.webp",
     alt: "Research Studio workflow from a read-only bilingual Chinese-and-English catalog to a reviewed recoverable export",
     links: [
+      ["Explore project", "/research-studio/"],
       ["Read case study", "https://github.com/NouraldinFarge/research-studio-case-study"],
       ["Inspect evidence", "https://github.com/NouraldinFarge/research-studio-case-study/blob/main/docs/verification-evidence.md"],
-      ["Review threat model", "https://github.com/NouraldinFarge/research-studio-case-study/blob/main/docs/threat-model.md"],
     ],
   },
 ];

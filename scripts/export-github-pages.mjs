@@ -10,7 +10,9 @@ await mkdir(output, { recursive: true });
 
 for (const relativePath of [
   "assets",
+  "_next",
   "projects",
+  "research-studio",
   "index.html",
   "404.html",
   "Nouraldin-Farge-Resume.pdf",
@@ -40,52 +42,96 @@ for (const relativePath of [
 
 const workerUrl = `${pathToFileURL(path.join(root, "dist", "server", "index.js")).href}?static-export=${Date.now()}`;
 const worker = (await import(workerUrl)).default;
-const response = await worker.fetch(
-  new Request(`${canonicalUrl}/`),
-  {},
-  { waitUntil() {}, passThroughOnException() {} },
-);
 
-if (!response.ok) {
-  throw new Error(`Static render failed with HTTP ${response.status}`);
+async function renderStaticPage(pathname) {
+  const response = await worker.fetch(
+    new Request(`${canonicalUrl}${pathname}`),
+    {},
+    { waitUntil() {}, passThroughOnException() {} },
+  );
+
+  if (!response.ok) {
+    throw new Error(`Static render for ${pathname} failed with HTTP ${response.status}`);
+  }
+
+  let rendered = await response.text();
+  const structuredDataScripts = [];
+  const streamedHeadFragments = [];
+
+  rendered = rendered.replace(
+    /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi,
+    (script) => {
+      const marker = `__STRUCTURED_DATA_${structuredDataScripts.length}__`;
+      structuredDataScripts.push(script);
+      return marker;
+    },
+  );
+
+  // Newer Vinext releases stream Next metadata into a hidden response fragment and
+  // move it into <head> with client JavaScript. The deployed portfolio is deliberately
+  // script-free, so promote those semantic tags during export instead.
+  rendered = rendered.replace(
+    /<div\b(?=[^>]*\bhidden\b)(?=[^>]*\bid=["']S:\d+["'])[^>]*>\s*<div\b[^>]*\bhidden\b[^>]*>([\s\S]*?)<\/div>\s*<\/div>/gi,
+    (block, content) => {
+      if (!/<(?:title|meta|link)\b/i.test(content)) {
+        return block;
+      }
+
+      streamedHeadFragments.push(
+        content
+          .replace(/<script\b[\s\S]*?<\/script>/gi, "")
+          .replace(/\sdata-vinext-streamed-icon=["'][^"']*["']/gi, ""),
+      );
+      return "";
+    },
+  );
+
+  rendered = rendered
+    .replace(/<script\b[\s\S]*?<\/script>/gi, "")
+    .replace(/<link\b[^>]*rel=["']modulepreload["'][^>]*\/?\s*>/gi, "")
+    .replace(
+      /<div\b[^>]*\bhidden\b[^>]*>\s*<!--\$\?-->\s*<template\b[^>]*><\/template>\s*<!--\/\$-->\s*<\/div>/gi,
+      "",
+    )
+    .replace(/<!--\$\??-->|<!--\/\$-->/g, "")
+    .replace(/\sdata-rsc-css-href=["'][^"']*["']/gi, "")
+    .replace(/\sdata-precedence=["'][^"']*["']/gi, "")
+    .replace(/\sdata-vinext-streamed-icon=["'][^"']*["']/gi, "")
+    .replace(/url\((?:file:\/\/\/)?[^)]*?\.vinext\/fonts\/([^)]+)\)/gi, "url(/assets/_vinext_fonts/$1)")
+    .replaceAll("http://localhost", canonicalUrl)
+    .replaceAll("https://nouraldin-farge-portfolio.awdsqecxzr.chatgpt.site", canonicalUrl);
+
+  if (streamedHeadFragments.length > 0) {
+    rendered = rendered.replace(
+      /<\/head>/i,
+      `${streamedHeadFragments.join("")}\n</head>`,
+    );
+  }
+
+  structuredDataScripts.forEach((script, index) => {
+    rendered = rendered.replace(
+      `__STRUCTURED_DATA_${index}__`,
+      script.replaceAll("https://nouraldin-farge-portfolio.awdsqecxzr.chatgpt.site", canonicalUrl),
+    );
+  });
+
+  return rendered;
 }
 
-let html = await response.text();
-const structuredDataScripts = [];
-
-html = html.replace(
-  /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi,
-  (script) => {
-    const marker = `__STRUCTURED_DATA_${structuredDataScripts.length}__`;
-    structuredDataScripts.push(script);
-    return marker;
-  },
-);
-
-html = html
-  .replace(/<script\b[\s\S]*?<\/script>/gi, "")
-  .replace(/<link\b[^>]*rel=["']modulepreload["'][^>]*\/?\s*>/gi, "")
-  .replace(/\sdata-rsc-css-href=["'][^"']*["']/gi, "")
-  .replace(/\sdata-precedence=["'][^"']*["']/gi, "")
-  .replace(/url\((?:file:\/\/\/)?[^)]*?\.vinext\/fonts\/([^)]+)\)/gi, "url(/assets/_vinext_fonts/$1)")
-  .replaceAll("http://localhost", canonicalUrl)
-  .replaceAll("https://nouraldin-farge-portfolio.awdsqecxzr.chatgpt.site", canonicalUrl);
-
-structuredDataScripts.forEach((script, index) => {
-  html = html.replace(`__STRUCTURED_DATA_${index}__`, script.replaceAll("https://nouraldin-farge-portfolio.awdsqecxzr.chatgpt.site", canonicalUrl));
-});
+const html = await renderStaticPage("/");
+const researchStudioHtml = await renderStaticPage("/research-studio");
 
 function collectStaticReferences(content, sourcePath = "index.html") {
   const references = new Set();
 
   if (!sourcePath.endsWith(".css")) {
     for (const match of content.matchAll(/(?:^|["'(])\/([^"'()\s<>?#]+)(?:[?#][^"'()\s<>]*)?/g)) {
-      if (!match[1].includes("..")) {
+      if (!match[1].includes("..") && !match[1].endsWith("/")) {
         references.add(match[1]);
       }
     }
     for (const match of content.matchAll(/https:\/\/nouraldinfarge\.github\.io\/([^"'()\s<>?#]+)(?:[?#][^"'()\s<>]*)?/g)) {
-      if (!match[1].includes("..")) {
+      if (!match[1].includes("..") && !match[1].endsWith("/")) {
         references.add(match[1]);
       }
     }
@@ -110,7 +156,12 @@ function collectStaticReferences(content, sourcePath = "index.html") {
   return references;
 }
 
-const pendingAssets = [...collectStaticReferences(html)];
+const pendingAssets = [
+  ...new Set([
+    ...collectStaticReferences(html),
+    ...collectStaticReferences(researchStudioHtml, "research-studio/index.html"),
+  ]),
+];
 const copiedAssets = new Set();
 
 while (pendingAssets.length > 0) {
@@ -144,8 +195,12 @@ while (pendingAssets.length > 0) {
 if (!html.includes("I build Windows software")) {
   throw new Error("The static export is missing the portfolio hero content.");
 }
-if (html.includes("localhost") || html.includes("_rsc") || html.includes(".vinext/fonts") || /(?:^|[\s"'(])[A-Za-z]:\//.test(html)) {
-  const unsafeReferences = html.match(/[^\s"']*(?:localhost|_rsc|\.vinext\/fonts|(?:^|[\s"'(])[A-Za-z]:\/)[^\s"']*/g) ?? [];
+if (!researchStudioHtml.includes("Research Studio turns AI output")) {
+  throw new Error("The static export is missing the Research Studio project page.");
+}
+const combinedHtml = `${html}\n${researchStudioHtml}`;
+if (combinedHtml.includes("localhost") || combinedHtml.includes("_rsc") || combinedHtml.includes(".vinext/fonts") || /(?:^|[\s"'(])[A-Za-z]:\//.test(combinedHtml)) {
+  const unsafeReferences = combinedHtml.match(/[^\s"']*(?:localhost|_rsc|\.vinext\/fonts|(?:^|[\s"'(])[A-Za-z]:\/)[^\s"']*/g) ?? [];
   throw new Error(`The static export still contains development or server-only references: ${unsafeReferences.slice(0, 5).join(", ")}`);
 }
 
@@ -167,8 +222,16 @@ if (notFoundHtml === html || !notFoundHtml.includes('content="noindex, follow"')
 }
 
 await writeFile(path.join(output, "index.html"), html, "utf8");
+await mkdir(path.join(output, "research-studio"), { recursive: true });
+await writeFile(
+  path.join(output, "research-studio", "index.html"),
+  researchStudioHtml,
+  "utf8",
+);
 await writeFile(path.join(output, "404.html"), notFoundHtml, "utf8");
 await writeFile(path.join(output, ".nojekyll"), "", "utf8");
 
 const exportedHtml = await readFile(path.join(output, "index.html"), "utf8");
-console.log(`Exported ${exportedHtml.length} bytes to ${output}`);
+console.log(
+  `Exported ${exportedHtml.length} home-page bytes plus the Research Studio project page to ${output}`,
+);

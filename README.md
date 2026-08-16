@@ -2,6 +2,8 @@
 
 A focused portfolio for desktop and local-first software engineering. It presents four evidence-backed projects, links directly to public code and releases, and includes a downloadable one-page résumé.
 
+Research Studio also has a dedicated synthetic-safe project page at `/research-studio/`. Its source-free case study and current alpha.24 evidence remain in the linked documentation repository; no private application artifact is copied into the portfolio.
+
 ## Portfolio principles
 
 - Evidence over hype: each claim connects to a repository, release, or case study.
