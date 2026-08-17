@@ -92,6 +92,36 @@ const proofPoints = [
   ["1", "private build with a dated public case-study snapshot"],
 ];
 
+const activePrereleases = [
+  {
+    name: "Reader",
+    status: "Public-source alpha",
+    description:
+      "A local-first Windows reading-library alpha for EPUB, PDF, text, and authorized audio workflows.",
+    boundary: "Source is open for inspection; there is no supported public binary release.",
+    stack: "JavaScript · IndexedDB · Rust/Tauri",
+    href: "https://github.com/NouraldinFarge/Reader",
+  },
+  {
+    name: "Media Scout",
+    status: "Public-source prerelease",
+    description:
+      "A permission-scoped Manifest V3 Chrome extension for media discovery and authorized downloads.",
+    boundary: "Source is open for inspection; there is no supported binary or Chrome Web Store release.",
+    stack: "JavaScript · Manifest V3 · Playwright",
+    href: "https://github.com/NouraldinFarge/media-scout-downloader",
+  },
+  {
+    name: "SiteWipe",
+    status: "Public-source prerelease",
+    description:
+      "A safety-engineering project for reviewed, target-scoped browser-data cleanup in a Manifest V3 extension.",
+    boundary: "Release gates remain open; there is no supported binary or extension-store release.",
+    stack: "JavaScript · Manifest V3 · PSL · property tests",
+    href: "https://github.com/NouraldinFarge/SiteWipe",
+  },
+];
+
 const principles = [
   ["BOUNDARIES", "Fail closed", "Destructive, ambiguous, or unsupported paths stop safely and require explicit review."],
   ["DATA", "Keep authority local", "User data stays understandable, portable, recoverable, and outside unnecessary services."],
@@ -180,6 +210,33 @@ export default function Home() {
             </article>
           ))}
         </div>
+
+        <section className="prerelease-section" id="active-source" aria-labelledby="active-source-heading">
+          <div className="section-heading">
+            <div>
+              <p className="kicker"><span /> Work in progress · public source</p>
+              <h2 id="active-source-heading">Active public-source prereleases.</h2>
+            </div>
+            <p>
+              These repositories are available for code review while their release gates remain open.
+              They are not presented as shipped products or supported downloads.
+            </p>
+          </div>
+          <div className="prerelease-grid">
+            {activePrereleases.map((project) => (
+              <article key={project.name}>
+                <span>{project.status}</span>
+                <h3>{project.name}</h3>
+                <p>{project.description}</p>
+                <p className="prerelease-boundary">{project.boundary}</p>
+                <p className="project-stack">{project.stack}</p>
+                <a href={project.href}>
+                  Review active source <span aria-hidden="true">↗</span>
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
       </section>
 
       <section className="approach-section" id="ownership">
@@ -213,7 +270,11 @@ export default function Home() {
         </div>
       </section>
       </main>
-      <footer><span>© 2026 Nouraldin Farge</span><span>React · TypeScript · Local-first · Evidence-backed</span></footer>
+      <footer>
+        <span>© 2026 Nouraldin Farge</span>
+        <a href="https://github.com/NouraldinFarge/portfolio-source">Portfolio source <span aria-hidden="true">↗</span></a>
+        <span>React · TypeScript · Local-first · Evidence-backed</span>
+      </footer>
     </>
   );
 }

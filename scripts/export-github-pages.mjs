@@ -18,7 +18,6 @@ for (const relativePath of [
   "Nouraldin-Farge-Resume.pdf",
   "favicon.svg",
   "og.png",
-  "og-v2.png",
   "robots.txt",
   "sitemap.xml",
   "_headers",
@@ -71,7 +70,7 @@ async function renderStaticPage(pathname) {
   // move it into <head> with client JavaScript. The deployed portfolio is deliberately
   // script-free, so promote those semantic tags during export instead.
   rendered = rendered.replace(
-    /<div\b(?=[^>]*\bhidden\b)(?=[^>]*\bid=["']S:\d+["'])[^>]*>\s*<div\b[^>]*\bhidden\b[^>]*>([\s\S]*?)<\/div>\s*<\/div>/gi,
+    /<div\b(?=[^>]*\bhidden\b)[^>]*>\s*(?:<!--\$\??-->)?\s*<div\b(?=[^>]*\bhidden\b)[^>]*>([\s\S]*?)<\/div>\s*(?:<!--\/\$-->)?\s*<\/div>/gi,
     (block, content) => {
       if (!/<(?:title|meta|link)\b/i.test(content)) {
         return block;
@@ -98,8 +97,7 @@ async function renderStaticPage(pathname) {
     .replace(/\sdata-precedence=["'][^"']*["']/gi, "")
     .replace(/\sdata-vinext-streamed-icon=["'][^"']*["']/gi, "")
     .replace(/url\((?:file:\/\/\/)?[^)]*?\.vinext\/fonts\/([^)]+)\)/gi, "url(/assets/_vinext_fonts/$1)")
-    .replaceAll("http://localhost", canonicalUrl)
-    .replaceAll("https://nouraldin-farge-portfolio.awdsqecxzr.chatgpt.site", canonicalUrl);
+    .replaceAll("http://localhost", canonicalUrl);
 
   if (streamedHeadFragments.length > 0) {
     rendered = rendered.replace(
@@ -111,7 +109,7 @@ async function renderStaticPage(pathname) {
   structuredDataScripts.forEach((script, index) => {
     rendered = rendered.replace(
       `__STRUCTURED_DATA_${index}__`,
-      script.replaceAll("https://nouraldin-farge-portfolio.awdsqecxzr.chatgpt.site", canonicalUrl),
+      script,
     );
   });
 
