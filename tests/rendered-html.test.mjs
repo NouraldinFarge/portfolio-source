@@ -22,6 +22,12 @@ test("server-renders the finished portfolio", async () => {
   assert.match(html, /Day-Trading Teacher/);
   assert.match(html, /Research Studio/);
   assert.match(html, /AI-ASSISTED DEVELOPMENT/);
+  assert.match(html, /Active public-source prereleases\./);
+  assert.match(html, /href="https:\/\/github\.com\/NouraldinFarge\/Reader"/);
+  assert.match(html, /href="https:\/\/github\.com\/NouraldinFarge\/media-scout-downloader"/);
+  assert.match(html, /href="https:\/\/github\.com\/NouraldinFarge\/SiteWipe"/);
+  assert.match(html, /They are not presented as shipped products or supported downloads/);
+  assert.match(html, /href="https:\/\/github\.com\/NouraldinFarge\/portfolio-source"/);
   assert.match(html, /Skip to main content/);
   assert.match(html, /<main id="main-content" tabindex="-1">/);
   assert.ok(html.indexOf("<header") < html.indexOf("<main"), "header must precede the main landmark");

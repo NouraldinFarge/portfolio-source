@@ -10,8 +10,10 @@
     "build": "vinext build",
     "start": "vinext start",
     "export:pages": "npm run build && node scripts/export-github-pages.mjs",
-    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/static-export.test.mjs",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
+    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/static-export.test.mjs tests/accessibility.test.mjs",
+    "test:a11y": "npm run build && node --test tests/accessibility.test.mjs",
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "check": "npm run lint && npm test"
   },
   "dependencies": {
     "next": "16.3.0",
@@ -26,8 +28,10 @@
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.0.2",
     "@vitejs/plugin-rsc": "^0.5.34",
+    "axe-core": "4.13.0",
     "eslint": "9.39.4",
     "eslint-config-next": "16.3.0",
+    "playwright": "1.62.1",
     "react-server-dom-webpack": "19.2.8",
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3",
