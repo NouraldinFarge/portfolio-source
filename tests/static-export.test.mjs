@@ -64,6 +64,11 @@ test("exports a self-contained GitHub Pages site", async () => {
       assert.equal(scripts.length, 1, "only the structured-data script may remain");
       assert.match(scripts[0], /^<script type="application\/ld\+json">/i);
       assert.doesNotMatch(exportedPage, /<template\b|data-vinext-streamed-icon/);
+      assert.doesNotMatch(
+        exportedPage,
+        /<div\b[^>]*\bhidden\b[^>]*>\s*<div\b[^>]*\bhidden\b[^>]*>\s*<(?:title|meta|link)\b/i,
+        "streamed metadata must be promoted into the document head",
+      );
     }
     assert.match(notFoundHtml, /<title>Page not found — Nouraldin Farge<\/title>/);
     assert.match(notFoundHtml, /content="noindex, follow"/);

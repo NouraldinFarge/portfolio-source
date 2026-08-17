@@ -70,7 +70,7 @@ async function renderStaticPage(pathname) {
   // move it into <head> with client JavaScript. The deployed portfolio is deliberately
   // script-free, so promote those semantic tags during export instead.
   rendered = rendered.replace(
-    /<div\b(?=[^>]*\bhidden\b)(?=[^>]*\bid=["']S:\d+["'])[^>]*>\s*<div\b[^>]*\bhidden\b[^>]*>([\s\S]*?)<\/div>\s*<\/div>/gi,
+    /<div\b(?=[^>]*\bhidden\b)[^>]*>\s*(?:<!--\$\??-->)?\s*<div\b(?=[^>]*\bhidden\b)[^>]*>([\s\S]*?)<\/div>\s*(?:<!--\/\$-->)?\s*<\/div>/gi,
     (block, content) => {
       if (!/<(?:title|meta|link)\b/i.test(content)) {
         return block;
