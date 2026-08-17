@@ -192,7 +192,7 @@ while (pendingAssets.length > 0) {
   }
 }
 
-if (!html.includes("I build Windows software")) {
+if (!html.includes("I build React &amp; TypeScript products")) {
   throw new Error("The static export is missing the portfolio hero content.");
 }
 if (!researchStudioHtml.includes("Research Studio turns AI output")) {
@@ -214,7 +214,7 @@ const notFoundHtml = html
   .replace(/<meta\s+name=["']twitter:[^>]+>/gi, "")
   .replace(
     /<body\b[^>]*>[\s\S]*<\/body>/i,
-    `${bodyOpeningTag}<main id="main-content" class="not-found-page" tabindex="-1"><p class="kicker"><span></span>404 · page not found</p><h1>That page doesn’t exist.</h1><p>The address may have changed, or the link may be incomplete. The engineering portfolio is still available from the home page.</p><a class="button primary" href="/">Return home</a></main><footer><span>© 2026 Nouraldin Farge</span><span>Desktop · Local-first · Evidence-backed · Human-reviewed</span></footer></body>`,
+    `${bodyOpeningTag}<main id="main-content" class="not-found-page" tabindex="-1"><p class="kicker"><span></span>404 · page not found</p><h1>That page doesn’t exist.</h1><p>The address may have changed, or the link may be incomplete. The engineering portfolio is still available from the home page.</p><a class="button primary" href="/">Return home</a></main><footer><span>© 2026 Nouraldin Farge</span><span>React · TypeScript · Local-first · Evidence-backed</span></footer></body>`,
   );
 
 if (notFoundHtml === html || !notFoundHtml.includes('content="noindex, follow"') || !notFoundHtml.includes("Return home")) {

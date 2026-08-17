@@ -11,11 +11,11 @@ export const viewport: Viewport = {
 export function generateMetadata(): Metadata {
   return {
     metadataBase: new URL(publicOrigin),
-    title: "Nouraldin Farge — Desktop & Local-First Software Engineer",
-    description: "Three public Windows releases and one source-free engineering case study, with inspectable code, safety boundaries, and release evidence.",
+    title: "Nouraldin Farge — React & TypeScript Product Engineer",
+    description: "React and TypeScript product engineering across frontend, full-stack, and local-first Windows software, supported by inspectable release evidence.",
     authors: [{ name: "Nouraldin Farge" }],
     creator: "Nouraldin Farge",
-    keywords: ["software engineer", "Windows desktop", "local-first", "AI-assisted software development", "React", "Rust", "Tauri", "Electron", "SQLite", "release engineering"],
+    keywords: ["software engineer", "React", "TypeScript", "frontend engineer", "full-stack engineer", "product engineer", "Windows desktop", "local-first", "Rust", "Tauri", "Electron", "SQLite", "release engineering"],
     icons: {
       icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
       shortcut: "/favicon.svg",
@@ -23,18 +23,18 @@ export function generateMetadata(): Metadata {
     alternates: { canonical: publicOrigin },
     robots: { index: true, follow: true },
     openGraph: {
-      title: "Nouraldin Farge — Software Engineer",
-      description: "Desktop and local-first systems with proof at every boundary.",
+      title: "Nouraldin Farge — React & TypeScript Product Engineer",
+      description: "React and TypeScript products with proof from interface through release.",
       url: publicOrigin,
       siteName: "Nouraldin Farge",
       type: "website",
-      images: [{ url: `${publicOrigin}/og-v2.png`, width: 1734, height: 907, alt: "Nouraldin Farge — Software Engineer · Desktop · Local-First · Evidence-Backed" }],
+      images: [{ url: `${publicOrigin}/github-social-preview-product-v1.png`, width: 1280, height: 640, alt: "Nouraldin Farge — React and TypeScript Product Engineer · Local-First · Evidence-Backed" }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Nouraldin Farge — Software Engineer",
-      description: "Desktop and local-first systems with proof at every boundary.",
-      images: [`${publicOrigin}/og-v2.png`],
+      title: "Nouraldin Farge — React & TypeScript Product Engineer",
+      description: "React and TypeScript products with proof from interface through release.",
+      images: [`${publicOrigin}/github-social-preview-product-v1.png`],
     },
   };
 }
@@ -51,7 +51,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       "https://github.com/NouraldinFarge",
       "https://linkedin.com/in/nouraldin-farge",
     ],
-    knowsAbout: ["Windows desktop software", "local-first systems", "Rust", "Tauri", "Electron", "React", "SQLite", "release engineering"],
+    knowsAbout: ["React", "TypeScript", "frontend engineering", "full-stack product development", "Windows desktop software", "local-first systems", "Rust", "Tauri", "Electron", "SQLite", "release engineering"],
   };
 
   return (

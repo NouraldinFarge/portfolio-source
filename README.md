@@ -1,13 +1,14 @@
-# Nouraldin Farge — Engineering Portfolio
+# Nouraldin Farge — React & TypeScript Product Portfolio
 
-A focused portfolio for desktop and local-first software engineering. It presents four evidence-backed projects, links directly to public code and releases, and includes a downloadable one-page résumé.
+A focused software-engineering portfolio led by React and TypeScript product work, with local-first Windows systems as a differentiator. It presents three shipped public products and one source-free case study, links directly to inspectable evidence, and includes a downloadable one-page résumé.
 
-Research Studio also has a dedicated synthetic-safe project page at `/research-studio/`. Its source-free case study and current alpha.24 evidence remain in the linked documentation repository; no private application artifact is copied into the portfolio.
+Research Studio also has a dedicated synthetic-safe project page at `/research-studio/`. The portfolio identifies v0.1.0-alpha.24 as a private build and links to the public, source-free case-study snapshot verified August 15, 2026; no private application artifact is copied into the portfolio.
 
 ## Portfolio principles
 
 - Evidence over hype: each claim connects to a repository, release, or case study.
-- Local-first by default: projects emphasize recoverable data, explicit trust boundaries, and deterministic behavior.
+- Product outcomes first: each project explains the user workflow, engineering decision, and evidence a recruiter can inspect.
+- Local-first where it matters: projects emphasize recoverable data, explicit trust boundaries, and deterministic behavior.
 - Honest AI disclosure: AI agents supported implementation; architecture, validation, safety, licensing, and release decisions remain human-reviewed.
 
 ## Local development

@@ -43,10 +43,10 @@ const projects = [
   },
   {
     name: "Day-Trading Teacher",
-    version: "v0.32.6",
+    version: "v0.36.0",
     availability: "Public Windows release",
     description:
-      "A local-first learning environment that connects lessons, decision plans, historical replay, paper practice, journaling, and spaced review without live recommendations.",
+      "A 13-lesson local-first learning environment that connects decision plans, historical replay, paper practice, journaling, reflection, and spaced review without live recommendations.",
     evidence: [
       "Deterministic decimal risk and expectancy calculations in Rust",
       "Schema-validated lesson imports and provenance-aware Fidelity history review",
@@ -58,20 +58,20 @@ const projects = [
     alt: "Day-Trading Teacher overview showing the lesson, replay, and journal learning loop",
     links: [
       ["View source", "https://github.com/NouraldinFarge/day-trading-teacher"],
-      ["Download v0.32.6", "https://github.com/NouraldinFarge/day-trading-teacher/releases/tag/v0.32.6"],
+      ["Download v0.36.0", "https://github.com/NouraldinFarge/day-trading-teacher/releases/tag/v0.36.0"],
       ["Take the project tour", "https://github.com/NouraldinFarge/day-trading-teacher#five-minute-project-tour"],
     ],
   },
   {
     name: "Research Studio",
     version: "v0.1.0-alpha.24",
-    availability: "Source-free case study",
+    availability: "Private build · public source-free case study",
     description:
-      "A guarded AI-assisted workflow that keeps source data read-only, stages untrusted model output, requires human approval, and exports only versioned approved metadata.",
+      "A private Electron/React workflow that keeps source data read-only, stages untrusted model output, requires human approval, and publishes only redistribution-safe evidence.",
     evidence: [
       "31,521 series and 2,242,170 episodes verified without changing the source database hash",
       "Evidence-first prompt v3, canonical bilingual tags, staged drafts, and explicit approval",
-      "One-title pilot, two-title campaign batches, private named pipe, native ABI gate, and rollback",
+      "Public source-free case-study snapshot verified August 15, 2026",
     ],
     ownership: "Product direction · extraction architecture · trust boundaries · prompt/eval strategy · release approval",
     stack: "Electron · React · TypeScript · Express · SQLite",
@@ -86,10 +86,10 @@ const projects = [
 ];
 
 const proofPoints = [
-  ["3", "verified public Windows releases"],
+  ["3", "shipped React/TypeScript Windows products"],
   ["4", "evidence-backed showcase projects"],
   ["3", "release pipelines with checksums, SBOMs, and provenance"],
-  ["1", "source-free case study with dated verification"],
+  ["1", "private build with a dated public case-study snapshot"],
 ];
 
 const principles = [
@@ -116,11 +116,11 @@ export default function Home() {
       <section className="hero" id="top">
         <div className="hero-copy">
           <p className="kicker"><span /> Chicago, Illinois · Open to software engineering roles</p>
-          <h1>I build Windows software with <em>proof at every boundary.</em></h1>
+          <h1>I build React &amp; TypeScript products with <em>proof at every boundary.</em></h1>
           <p className="hero-summary">
-            I’m Nouraldin Farge. My portfolio pairs three public, portable Windows releases
-            with one source-free engineering case study—each grounded in explicit safety
-            limits, recoverable local data, and verification you can inspect.
+            I’m Nouraldin Farge, a software engineer who carries user-facing products from
+            interface and application logic through data design, testing, and release.
+            Three shipped Windows products and one source-free case study make the evidence inspectable.
           </p>
           <div className="hero-actions">
             <a className="button primary" href="#work">Review shipped work</a>
@@ -145,7 +145,7 @@ export default function Home() {
 
       <section className="work-section" id="work">
         <div className="section-heading">
-          <div><p className="kicker"><span /> Projects · verified August 2026</p><h2>Projects with proof attached.</h2></div>
+          <div><p className="kicker"><span /> Projects · verified August 2026</p><h2>Shipped products with proof attached.</h2></div>
           <p>Start with the outcome, then follow exact links to the implementation, immutable release, methodology, or bounded public evidence.</p>
         </div>
 
@@ -205,7 +205,7 @@ export default function Home() {
       <section className="contact-section" id="contact">
         <p className="kicker"><span /> Available for software engineering roles</p>
         <h2>Need an engineer who can turn complex requirements into dependable software?</h2>
-        <p className="contact-copy">I’m especially interested in desktop products, local-first systems, release engineering, and trustworthy AI-assisted workflows.</p>
+        <p className="contact-copy">I’m especially interested in user-facing React/TypeScript products, full-stack application workflows, local-first systems, and release engineering.</p>
         <div className="contact-actions">
           <a className="button primary" href="mailto:nouraldinfarge@gmail.com">Email Nouraldin</a>
           <a className="button secondary" href="https://linkedin.com/in/nouraldin-farge">LinkedIn <span aria-hidden="true">↗</span></a>
@@ -213,7 +213,7 @@ export default function Home() {
         </div>
       </section>
       </main>
-      <footer><span>© 2026 Nouraldin Farge</span><span>Desktop · Local-first · Evidence-backed · Human-reviewed</span></footer>
+      <footer><span>© 2026 Nouraldin Farge</span><span>React · TypeScript · Local-first · Evidence-backed</span></footer>
     </>
   );
 }

@@ -57,7 +57,7 @@ test("exports a self-contained GitHub Pages site", async () => {
     assert.notEqual(notFoundHtml, indexHtml);
     assert.match(
       indexHtml,
-      /<head>[\s\S]*<title>Nouraldin Farge — Desktop &amp; Local-First Software Engineer<\/title>[\s\S]*<\/head>/,
+      /<head>[\s\S]*<title>Nouraldin Farge — React &amp; TypeScript Product Engineer<\/title>[\s\S]*<\/head>/,
     );
     for (const exportedPage of [indexHtml, researchStudioHtml]) {
       const scripts = exportedPage.match(/<script\b[\s\S]*?<\/script>/gi) ?? [];
@@ -75,6 +75,7 @@ test("exports a self-contained GitHub Pages site", async () => {
     assert.ok(relativeFiles.includes("research-studio/index.html"));
     assert.ok(relativeFiles.includes("projects/research-studio/product-approved-review.jpg"));
     assert.ok(!relativeFiles.includes("og.png"));
+    assert.ok(relativeFiles.includes("github-social-preview-product-v1.png"));
     assert.ok(!relativeFiles.some((file) => file.endsWith(".js")), "static output must not retain unused JavaScript bundles");
     assert.deepEqual(
       await readFile(path.join(output, "Nouraldin-Farge-Resume.pdf")),
