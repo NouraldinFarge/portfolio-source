@@ -57,6 +57,8 @@ for (const relativePath of [
   "github-social-preview-software-engineer-v2.png",
   "og.png",
   "portfolio-build.json",
+  "CONTENT-LICENSE.md",
+  "PROJECT-MEDIA-NOTICES.md",
   "robots.txt",
   "sitemap.xml",
   "_headers",
@@ -68,11 +70,15 @@ for (const relativePath of [
 }
 
 for (const relativePath of [
+  "CONTENT-LICENSE.md",
+  "PROJECT-MEDIA-NOTICES.md",
   "robots.txt",
   "sitemap.xml",
 ]) {
   await cp(
-    path.join(root, "dist", "client", relativePath),
+    relativePath.endsWith(".md")
+      ? path.join(root, relativePath)
+      : path.join(root, "dist", "client", relativePath),
     path.join(output, relativePath),
     { recursive: true },
   );

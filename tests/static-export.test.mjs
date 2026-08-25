@@ -75,10 +75,22 @@ test("exports a self-contained GitHub Pages site", async () => {
     assert.ok(relativeFiles.includes("sitemap.xml"));
     assert.ok(relativeFiles.includes("research-studio/index.html"));
     assert.ok(relativeFiles.includes("projects/research-studio/product-approved-review.jpg"));
+    assert.ok(relativeFiles.includes("projects/media-scout-inspector.png"));
+    assert.ok(relativeFiles.includes("projects/reader-library-overview.jpg"));
     assert.ok(!relativeFiles.includes("og.png"));
     assert.ok(relativeFiles.includes("github-social-preview-software-engineer-v2.png"));
     assert.ok(!relativeFiles.includes("github-social-preview-product-v1.png"));
     assert.ok(relativeFiles.includes("portfolio-build.json"));
+    assert.deepEqual(
+      await readFile(path.join(output, "PROJECT-MEDIA-NOTICES.md")),
+      await readFile(path.join(root, "PROJECT-MEDIA-NOTICES.md")),
+      "the Pages export must preserve project-media provenance and license notices",
+    );
+    assert.deepEqual(
+      await readFile(path.join(output, "CONTENT-LICENSE.md")),
+      await readFile(path.join(root, "CONTENT-LICENSE.md")),
+      "the Pages export must preserve the portfolio content-license boundary",
+    );
     assert.ok(!relativeFiles.some((file) => file.endsWith(".js")), "static output must not retain unused JavaScript bundles");
     assert.deepEqual(
       await readFile(path.join(output, "Nouraldin-Farge-Resume.pdf")),

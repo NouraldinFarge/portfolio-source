@@ -24,7 +24,7 @@ The generated deployment is intentionally kept in the separate [`NouraldinFarge.
 | --- | --- |
 | `/` | Shipped projects, active public-source prereleases, engineering ownership, and contact path |
 | `/research-studio/` | Public, source-free case study using redistribution-safe synthetic evidence |
-| `public/` | Portfolio-owned static assets and the current résumé PDF |
+| `public/` | Static assets and the current résumé PDF, with ownership and licensing recorded in the content and project-media notices |
 | `scripts/export-github-pages.mjs` | Script-free, self-contained GitHub Pages export |
 | `tests/` | Rendered HTML, export integrity, and Chrome/Axe regression coverage |
 
@@ -61,9 +61,11 @@ npm run export:pages:release -- ../NouraldinFarge.github.io
 
 The release exporter refuses a dirty tracked source tree, records the exact source revision in `portfolio-build.json`, copies only referenced styles, fonts, public assets, the résumé, and search metadata, and generates a dedicated `noindex` 404 page. Rendered HTML is parsed into a document tree before publication: streamed metadata is promoted structurally, only valid JSON-LD is retained, and runtime scripts, inline styles, templates, module preloads, active attributes, unsafe URLs, and embedded browsing contexts are removed or rejected. Adversarial transform tests cover malformed and repeated tags as well as ambiguous streamed fragments. The exporter also rejects executable bundles, unsafe paths, local-only references, and missing content.
 
-## Hosting configuration
+## Deployment and media provenance
 
-`.openai/hosting.json` stores the existing Sites project identifier used by the deployment workflow. It is intentionally versioned so deployments update the established project instead of creating duplicates. The file contains no credential; deployment credentials remain outside the repository.
+The Reader and Media Scout images used in the active-source section are unmodified, synthetic-safe project captures. [Project media notices](PROJECT-MEDIA-NOTICES.md) records their exact source revisions, hashes, provenance boundaries, and MIT license notice.
+
+[GitHub Pages](https://nouraldinfarge.github.io) is the canonical portfolio deployment and is published from the generated [`NouraldinFarge.github.io`](https://github.com/NouraldinFarge/NouraldinFarge.github.io) repository. `.openai/hosting.json` preserves a credential-free legacy Sites identifier for provenance only; it is not an active deployment target and is not part of the GitHub Pages release workflow.
 
 ## Engineering and disclosure
 
@@ -82,4 +84,4 @@ Focused accessibility, compatibility, documentation, and correctness improvement
 
 ## License
 
-Source code is available under the [MIT License](LICENSE). Personal portfolio copy, résumé content, branding, and media assets are excluded from that grant; see [CONTENT-LICENSE.md](CONTENT-LICENSE.md).
+Source code is available under the [MIT License](LICENSE). Personal portfolio copy, résumé content, branding, and most media assets are excluded from that grant; the two reused project screenshots retain their source MIT license. See [CONTENT-LICENSE.md](CONTENT-LICENSE.md) and [PROJECT-MEDIA-NOTICES.md](PROJECT-MEDIA-NOTICES.md).

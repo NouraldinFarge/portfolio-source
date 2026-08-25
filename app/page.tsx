@@ -94,33 +94,65 @@ const proofPoints = [
 
 const activePrereleases = [
   {
+    name: "Media Scout Downloader",
+    version: "v3.7.13",
+    status: "Chrome MV3 prerelease",
+    description:
+      "A local-first, permission-scoped Chrome extension for inspecting and saving browser-visible media you are authorized to use.",
+    evidence: [
+      "Real unpacked-extension Playwright smoke test with zero serious or critical axe findings on tested routes",
+      "Targeted critical modules—not the entire extension—achieved 91.74% statement/line coverage, 72.51% branch coverage, and 90.97% function coverage.",
+      "Zero runtime package dependencies, deterministic allowlisted artifacts, and zero production vulnerabilities",
+    ],
+    boundary:
+      "No tag, GitHub Release, supported binary, or Chrome Web Store listing; manual Chrome/Brave, assistive-technology, final artifact/privacy, and release-approval gates remain open.",
+    stack: "JavaScript · Manifest V3 · Chrome APIs · Playwright · CodeQL",
+    image: "/projects/media-scout-inspector.png",
+    alt: "Media Scout Downloader Inspector showing one synthetic eligible-media result in the real unpacked extension",
+    links: [
+      ["Review source", "https://github.com/NouraldinFarge/media-scout-downloader"],
+      ["Product tour", "https://github.com/NouraldinFarge/media-scout-downloader#product-tour"],
+      ["Verified evidence", "https://github.com/NouraldinFarge/media-scout-downloader#verified-engineering-evidence"],
+    ],
+  },
+  {
     name: "Reader",
-    status: "Public-source alpha",
+    version: "v0.1.0-alpha.4",
+    status: "Public-source Windows alpha",
     description:
-      "A local-first Windows reading-library alpha for EPUB, PDF, text, and authorized audio workflows.",
-    boundary: "Source is open for inspection; there is no supported public binary release.",
-    stack: "JavaScript · IndexedDB · Rust/Tauri",
-    href: "https://github.com/NouraldinFarge/Reader",
-  },
-  {
-    name: "Media Scout",
-    status: "Public-source prerelease",
-    description:
-      "A permission-scoped Manifest V3 Chrome extension for media discovery and authorized downloads.",
-    boundary: "Source is open for inspection; there is no supported binary or Chrome Web Store release.",
-    stack: "JavaScript · Manifest V3 · Playwright",
-    href: "https://github.com/NouraldinFarge/media-scout-downloader",
-  },
-  {
-    name: "SiteWipe",
-    status: "Public-source prerelease",
-    description:
-      "A safety-engineering project for reviewed, target-scoped browser-data cleanup in a Manifest V3 extension.",
-    boundary: "Release gates remain open; there is no supported binary or extension-store release.",
-    stack: "JavaScript · Manifest V3 · PSL · property tests",
-    href: "https://github.com/NouraldinFarge/SiteWipe",
+      "A local-first Windows reading library for EPUB, PDF, text, and authorized audio, with IndexedDB persistence and a least-privilege Rust/Tauri shell.",
+    evidence: [
+      "40 of 40 unit, policy, persistence, and shell tests passed",
+      "21 of 21 high-risk coverage tests at 99.19% lines/statements, 89.67% branches, and 100% functions",
+      "Exact-main browser/accessibility, Windows/Rust packaging, and both CodeQL analyzers are green",
+    ],
+    boundary:
+      "No GitHub Release or supported binary; the Windows CI candidate is unsigned, and the clean Windows 10/11 install, upgrade, uninstall, and residual-data matrix remains open.",
+    stack: "JavaScript · IndexedDB · Rust/Tauri · Playwright · axe",
+    image: "/projects/reader-library-overview.jpg",
+    alt: "Reader library overview showing three original synthetic titles, search, progress, local navigation, and a privacy message",
+    links: [
+      ["Review source", "https://github.com/NouraldinFarge/Reader"],
+      ["Product tour", "https://github.com/NouraldinFarge/Reader#product-tour"],
+      ["Verified evidence", "https://github.com/NouraldinFarge/Reader#verified-evidence"],
+    ],
   },
 ];
+
+const releaseGatedProject = {
+  name: "SiteWipe",
+  status: "Public source · release-gated",
+  description:
+    "A safety-engineering project for reviewed, target-scoped browser-data cleanup in a Manifest V3 extension.",
+  boundary:
+    "The public main branch remains a prerelease, and installed-browser, accessibility, media, privacy-hosting, and release-approval gates remain open. There is no supported binary or extension-store listing.",
+  stack: "JavaScript · Manifest V3 · PSL boundaries · property tests",
+  links: [
+    ["Review source", "https://github.com/NouraldinFarge/SiteWipe"],
+    ["Architecture", "https://github.com/NouraldinFarge/SiteWipe#architecture"],
+    ["Evidence and limits", "https://github.com/NouraldinFarge/SiteWipe#evidence-and-limitations"],
+  ],
+};
 
 const principles = [
   ["BOUNDARIES", "Fail closed", "Destructive, ambiguous, or unsupported paths stop safely and require explicit review."],
@@ -214,28 +246,69 @@ export default function Home() {
         <section className="prerelease-section" id="active-source" aria-labelledby="active-source-heading">
           <div className="section-heading">
             <div>
-              <p className="kicker"><span /> Work in progress · public source</p>
-              <h2 id="active-source-heading">Active public-source prereleases.</h2>
+              <p className="kicker"><span /> Active source · verified August 2026</p>
+              <h2 id="active-source-heading">Active source, backed by evidence.</h2>
             </div>
             <p>
-              These repositories are available for code review while their release gates remain open.
-              They are not presented as shipped products or supported downloads.
+              Reader and Media Scout are ready for engineering review while their release gates
+              remain open. SiteWipe remains visibly gated. None is presented as a shipped product,
+              supported download, or extension-store release.
             </p>
           </div>
-          <div className="prerelease-grid">
+          <div className="active-project-grid">
             {activePrereleases.map((project) => (
-              <article key={project.name}>
-                <span>{project.status}</span>
-                <h3>{project.name}</h3>
-                <p>{project.description}</p>
-                <p className="prerelease-boundary">{project.boundary}</p>
-                <p className="project-stack">{project.stack}</p>
-                <a href={project.href}>
-                  Review active source <span aria-hidden="true">↗</span>
+              <article className="active-project-card" key={project.name}>
+                <a
+                  className="active-project-image"
+                  href={project.links[0][1]}
+                  aria-label={`Review source for ${project.name}`}
+                >
+                  {/* Verbatim, provenance-recorded project capture; native img keeps the static export optimizer-free. */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={project.image} alt={project.alt} loading="lazy" decoding="async" />
+                  <span className="active-project-badge">{project.status}</span>
                 </a>
+                <div className="active-project-copy">
+                  <div className="project-meta">
+                    <span>Active source · verified August 2026</span>
+                    <strong>{project.version}</strong>
+                  </div>
+                  <h3>{project.name}</h3>
+                  <p className="project-description">{project.description}</p>
+                  <ul className="evidence-list">
+                    {project.evidence.map((item) => <li key={item}>{item}</li>)}
+                  </ul>
+                  <p className="prerelease-boundary">
+                    <b>Current boundary:</b> {project.boundary}
+                  </p>
+                  <p className="project-stack">{project.stack}</p>
+                  <div className="project-links">
+                    {project.links.map(([label, href]) => (
+                      <a key={href} href={href}>{label} <span aria-hidden="true">↗</span></a>
+                    ))}
+                  </div>
+                </div>
               </article>
             ))}
           </div>
+          <article className="release-gated-project" aria-labelledby="sitewipe-heading">
+            <div>
+              <span>{releaseGatedProject.status}</span>
+              <h3 id="sitewipe-heading">{releaseGatedProject.name}</h3>
+              <p>{releaseGatedProject.description}</p>
+            </div>
+            <div>
+              <p className="prerelease-boundary">
+                <b>Current boundary:</b> {releaseGatedProject.boundary}
+              </p>
+              <p className="project-stack">{releaseGatedProject.stack}</p>
+              <div className="project-links">
+                {releaseGatedProject.links.map(([label, href]) => (
+                  <a key={href} href={href}>{label} <span aria-hidden="true">↗</span></a>
+                ))}
+              </div>
+            </div>
+          </article>
         </section>
       </section>
 
