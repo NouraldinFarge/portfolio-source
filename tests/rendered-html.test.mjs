@@ -39,7 +39,8 @@ test("server-renders the finished portfolio", async () => {
   assert.match(html, /rel="icon" href="(?:https:\/\/nouraldinfarge\.github\.io)?\/favicon\.svg"/);
   assert.match(html, /name="theme-color" content="#f2f3e9"/);
   assert.match(html, /aria-label="View source for DrawScope"/);
-  assert.match(html, /github-social-preview-product-v1\.png/);
+  assert.match(html, /React &amp; TypeScript Software Engineer/);
+  assert.match(html, /github-social-preview-software-engineer-v2\.png/);
   assert.match(html, /v0\.6\.5/);
   assert.match(html, /v0\.3\.5/);
   assert.match(html, /v0\.36\.0/);

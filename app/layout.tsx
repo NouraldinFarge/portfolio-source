@@ -11,7 +11,7 @@ export const viewport: Viewport = {
 export function generateMetadata(): Metadata {
   return {
     metadataBase: new URL(publicOrigin),
-    title: "Nouraldin Farge — React & TypeScript Product Engineer",
+    title: "Nouraldin Farge — React & TypeScript Software Engineer",
     description: "React and TypeScript product engineering across frontend, full-stack, and local-first Windows software, supported by inspectable release evidence.",
     authors: [{ name: "Nouraldin Farge" }],
     creator: "Nouraldin Farge",
@@ -23,18 +23,18 @@ export function generateMetadata(): Metadata {
     alternates: { canonical: publicOrigin },
     robots: { index: true, follow: true },
     openGraph: {
-      title: "Nouraldin Farge — React & TypeScript Product Engineer",
+      title: "Nouraldin Farge — React & TypeScript Software Engineer",
       description: "React and TypeScript products with proof from interface through release.",
       url: publicOrigin,
       siteName: "Nouraldin Farge",
       type: "website",
-      images: [{ url: `${publicOrigin}/github-social-preview-product-v1.png`, width: 1280, height: 640, alt: "Nouraldin Farge — React and TypeScript Product Engineer · Local-First · Evidence-Backed" }],
+      images: [{ url: `${publicOrigin}/github-social-preview-software-engineer-v2.png`, width: 1280, height: 640, alt: "Nouraldin Farge — React and TypeScript Software Engineer · Local-First · Evidence-Backed" }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Nouraldin Farge — React & TypeScript Product Engineer",
+      title: "Nouraldin Farge — React & TypeScript Software Engineer",
       description: "React and TypeScript products with proof from interface through release.",
-      images: [`${publicOrigin}/github-social-preview-product-v1.png`],
+      images: [`${publicOrigin}/github-social-preview-software-engineer-v2.png`],
     },
   };
 }

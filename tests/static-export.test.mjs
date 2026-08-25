@@ -57,7 +57,7 @@ test("exports a self-contained GitHub Pages site", async () => {
     assert.notEqual(notFoundHtml, indexHtml);
     assert.match(
       indexHtml,
-      /<head>[\s\S]*<title>Nouraldin Farge — React &amp; TypeScript Product Engineer<\/title>[\s\S]*<\/head>/,
+      /<head>[\s\S]*<title>Nouraldin Farge — React &amp; TypeScript Software Engineer<\/title>[\s\S]*<\/head>/,
     );
     for (const exportedPage of [indexHtml, researchStudioHtml]) {
       const scripts = exportedPage.match(/<script\b[\s\S]*?<\/script>/gi) ?? [];
@@ -80,13 +80,25 @@ test("exports a self-contained GitHub Pages site", async () => {
     assert.ok(relativeFiles.includes("research-studio/index.html"));
     assert.ok(relativeFiles.includes("projects/research-studio/product-approved-review.jpg"));
     assert.ok(!relativeFiles.includes("og.png"));
-    assert.ok(relativeFiles.includes("github-social-preview-product-v1.png"));
+    assert.ok(relativeFiles.includes("github-social-preview-software-engineer-v2.png"));
+    assert.ok(!relativeFiles.includes("github-social-preview-product-v1.png"));
+    assert.ok(relativeFiles.includes("portfolio-build.json"));
     assert.ok(!relativeFiles.some((file) => file.endsWith(".js")), "static output must not retain unused JavaScript bundles");
     assert.deepEqual(
       await readFile(path.join(output, "Nouraldin-Farge-Resume.pdf")),
       await readFile(path.join(root, "public", "Nouraldin-Farge-Resume.pdf")),
       "the Pages export must include the current portfolio résumé",
     );
+    const buildMetadata = JSON.parse(
+      await readFile(path.join(output, "portfolio-build.json"), "utf8"),
+    );
+    assert.equal(buildMetadata.schemaVersion, 1);
+    assert.equal(
+      buildMetadata.sourceRepository,
+      "https://github.com/NouraldinFarge/portfolio-source",
+    );
+    assert.match(buildMetadata.sourceRevision, /^[0-9a-f]{40}$/);
+    assert.ok(["clean", "dirty"].includes(buildMetadata.sourceTreeState));
 
     const references = new Set([
       ...collectLocalReferences(indexHtml),

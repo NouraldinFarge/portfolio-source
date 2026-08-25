@@ -10,13 +10,14 @@
     "build": "vinext build",
     "start": "vinext start",
     "export:pages": "npm run build && node scripts/export-github-pages.mjs",
+    "export:pages:release": "npm run build && node scripts/export-github-pages.mjs --require-clean",
     "test": "npm run build && node --test tests/rendered-html.test.mjs tests/static-export.test.mjs tests/accessibility.test.mjs",
     "test:a11y": "npm run build && node --test tests/accessibility.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "check": "npm run lint && npm test"
   },
   "dependencies": {
-    "next": "16.3.0",
+    "next": "16.3.2",
     "react": "^19.2.8",
     "react-dom": "19.2.8"
   },

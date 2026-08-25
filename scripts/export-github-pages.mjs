@@ -1,10 +1,42 @@
+import { execFile } from "node:child_process";
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import { promisify } from "node:util";
 
 const root = process.cwd();
-const output = path.resolve(process.argv[2] ?? "github-pages-export");
+const execFileAsync = promisify(execFile);
+const argumentsList = process.argv.slice(2);
+const requireClean = argumentsList.includes("--require-clean");
+const outputArgument = argumentsList.find((argument) => argument !== "--require-clean");
+const output = path.resolve(outputArgument ?? "github-pages-export");
 const canonicalUrl = "https://nouraldinfarge.github.io";
+const sourceRepository = "https://github.com/NouraldinFarge/portfolio-source";
+
+async function resolveBuildMetadata() {
+  const [{ stdout: revisionOutput }, { stdout: statusOutput }] = await Promise.all([
+    execFileAsync("git", ["rev-parse", "HEAD"], { cwd: root }),
+    execFileAsync("git", ["status", "--porcelain", "--untracked-files=no"], { cwd: root }),
+  ]);
+  const sourceRevision = revisionOutput.trim();
+  const sourceTreeState = statusOutput.trim() ? "dirty" : "clean";
+
+  if (!/^[0-9a-f]{40}$/.test(sourceRevision)) {
+    throw new Error(`Could not resolve a full source revision: ${sourceRevision}`);
+  }
+  if (requireClean && sourceTreeState !== "clean") {
+    throw new Error("Release export requires a clean tracked source tree.");
+  }
+
+  return {
+    schemaVersion: 1,
+    sourceRepository,
+    sourceRevision,
+    sourceTreeState,
+  };
+}
+
+const buildMetadata = await resolveBuildMetadata();
 
 await mkdir(output, { recursive: true });
 
@@ -17,7 +49,10 @@ for (const relativePath of [
   "404.html",
   "Nouraldin-Farge-Resume.pdf",
   "favicon.svg",
+  "github-social-preview-product-v1.png",
+  "github-social-preview-software-engineer-v2.png",
   "og.png",
+  "portfolio-build.json",
   "robots.txt",
   "sitemap.xml",
   "_headers",
@@ -228,6 +263,11 @@ await writeFile(
 );
 await writeFile(path.join(output, "404.html"), notFoundHtml, "utf8");
 await writeFile(path.join(output, ".nojekyll"), "", "utf8");
+await writeFile(
+  path.join(output, "portfolio-build.json"),
+  `${JSON.stringify(buildMetadata, null, 2)}\n`,
+  "utf8",
+);
 
 const exportedHtml = await readFile(path.join(output, "index.html"), "utf8");
 console.log(
