@@ -3,6 +3,10 @@ import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { promisify } from "node:util";
+import {
+  createNotFoundDocument,
+  sanitizeRenderedDocument,
+} from "./static-html.mjs";
 
 const root = process.cwd();
 const execFileAsync = promisify(execFile);
@@ -88,67 +92,11 @@ async function renderStaticPage(pathname) {
     throw new Error(`Static render for ${pathname} failed with HTTP ${response.status}`);
   }
 
-  let rendered = await response.text();
-  const structuredDataScripts = [];
-  const streamedHeadFragments = [];
-
-  rendered = rendered.replace(
-    /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi,
-    (script) => {
-      const marker = `__STRUCTURED_DATA_${structuredDataScripts.length}__`;
-      structuredDataScripts.push(script);
-      return marker;
-    },
-  );
-
   // Newer Vinext releases stream Next metadata into a hidden response fragment and
   // move it into <head> with client JavaScript. The deployed portfolio is deliberately
-  // script-free, so promote those semantic tags during export instead.
-  rendered = rendered.replace(
-    /<div\b(?=[^>]*\bhidden\b)[^>]*>\s*(?:<!--\$\??-->)?\s*<div\b(?=[^>]*\bhidden\b)[^>]*>([\s\S]*?)<\/div>\s*(?:<!--\/\$-->)?\s*<\/div>/gi,
-    (block, content) => {
-      if (!/<(?:title|meta|link)\b/i.test(content)) {
-        return block;
-      }
-
-      streamedHeadFragments.push(
-        content
-          .replace(/<script\b[\s\S]*?<\/script>/gi, "")
-          .replace(/\sdata-vinext-streamed-icon=["'][^"']*["']/gi, ""),
-      );
-      return "";
-    },
-  );
-
-  rendered = rendered
-    .replace(/<script\b[\s\S]*?<\/script>/gi, "")
-    .replace(/<link\b[^>]*rel=["']modulepreload["'][^>]*\/?\s*>/gi, "")
-    .replace(
-      /<div\b[^>]*\bhidden\b[^>]*>\s*<!--\$\?-->\s*<template\b[^>]*><\/template>\s*<!--\/\$-->\s*<\/div>/gi,
-      "",
-    )
-    .replace(/<!--\$\??-->|<!--\/\$-->/g, "")
-    .replace(/\sdata-rsc-css-href=["'][^"']*["']/gi, "")
-    .replace(/\sdata-precedence=["'][^"']*["']/gi, "")
-    .replace(/\sdata-vinext-streamed-icon=["'][^"']*["']/gi, "")
-    .replace(/url\((?:file:\/\/\/)?[^)]*?\.vinext\/fonts\/([^)]+)\)/gi, "url(/assets/_vinext_fonts/$1)")
-    .replaceAll("http://localhost", canonicalUrl);
-
-  if (streamedHeadFragments.length > 0) {
-    rendered = rendered.replace(
-      /<\/head>/i,
-      `${streamedHeadFragments.join("")}\n</head>`,
-    );
-  }
-
-  structuredDataScripts.forEach((script, index) => {
-    rendered = rendered.replace(
-      `__STRUCTURED_DATA_${index}__`,
-      script,
-    );
-  });
-
-  return rendered;
+  // script-free, so parse the document, promote only semantic head nodes, and
+  // remove active runtime content structurally before serialization.
+  return sanitizeRenderedDocument(await response.text(), { canonicalUrl });
 }
 
 const html = await renderStaticPage("/");
@@ -237,18 +185,7 @@ if (combinedHtml.includes("localhost") || combinedHtml.includes("_rsc") || combi
   throw new Error(`The static export still contains development or server-only references: ${unsafeReferences.slice(0, 5).join(", ")}`);
 }
 
-const bodyOpeningTag = html.match(/<body\b[^>]*>/i)?.[0] ?? "<body>";
-const notFoundHtml = html
-  .replace(/<title>[\s\S]*?<\/title>/i, "<title>Page not found — Nouraldin Farge</title>")
-  .replace(/<meta\s+name=["']description["'][^>]*>/i, '<meta name="description" content="The requested page could not be found. Return to Nouraldin Farge\'s software engineering portfolio."/>')
-  .replace(/<meta\s+name=["']robots["'][^>]*>/i, '<meta name="robots" content="noindex, follow"/>')
-  .replace(/<link\s+rel=["']canonical["'][^>]*>/i, "")
-  .replace(/<meta\s+property=["']og:[^>]+>/gi, "")
-  .replace(/<meta\s+name=["']twitter:[^>]+>/gi, "")
-  .replace(
-    /<body\b[^>]*>[\s\S]*<\/body>/i,
-    `${bodyOpeningTag}<main id="main-content" class="not-found-page" tabindex="-1"><p class="kicker"><span></span>404 · page not found</p><h1>That page doesn’t exist.</h1><p>The address may have changed, or the link may be incomplete. The engineering portfolio is still available from the home page.</p><a class="button primary" href="/">Return home</a></main><footer><span>© 2026 Nouraldin Farge</span><span>React · TypeScript · Local-first · Evidence-backed</span></footer></body>`,
-  );
+const notFoundHtml = createNotFoundDocument(html);
 
 if (notFoundHtml === html || !notFoundHtml.includes('content="noindex, follow"') || !notFoundHtml.includes("Return home")) {
   throw new Error("The static export did not generate a valid noindex 404 page.");

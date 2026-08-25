@@ -11,7 +11,7 @@
     "start": "vinext start",
     "export:pages": "npm run build && node scripts/export-github-pages.mjs",
     "export:pages:release": "npm run build && node scripts/export-github-pages.mjs --require-clean",
-    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/static-export.test.mjs tests/accessibility.test.mjs",
+    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/static-html.test.mjs tests/static-export.test.mjs tests/accessibility.test.mjs",
     "test:a11y": "npm run build && node --test tests/accessibility.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "check": "npm run lint && npm test"
@@ -32,6 +32,7 @@
     "axe-core": "4.13.0",
     "eslint": "9.39.4",
     "eslint-config-next": "16.3.2",
+    "parse5": "8.0.1",
     "playwright": "1.62.1",
     "react-server-dom-webpack": "19.2.8",
     "tailwindcss": "4.3.3",
