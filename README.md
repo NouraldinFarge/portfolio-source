@@ -6,7 +6,7 @@
 
 The maintainable React and TypeScript source for [nouraldinfarge.github.io](https://nouraldinfarge.github.io). The portfolio leads with shipped, evidence-backed work and keeps active public-source prereleases in a clearly separate section so work in progress is never mistaken for a supported release.
 
-![Nouraldin Farge — React and TypeScript product engineering portfolio](public/github-social-preview-product-v1.png)
+![Nouraldin Farge — React and TypeScript software engineering portfolio](public/github-social-preview-software-engineer-v2.png)
 
 ## What this repository contains
 
@@ -56,10 +56,10 @@ npm run export:pages
 To write the artifact into a separate Pages checkout:
 
 ```bash
-npm run export:pages -- ../NouraldinFarge.github.io
+npm run export:pages:release -- ../NouraldinFarge.github.io
 ```
 
-The exporter copies only referenced styles, fonts, public assets, the résumé, and search metadata. It rejects executable bundles, unsafe paths, local-only references, and missing content, then generates a dedicated `noindex` 404 page.
+The release exporter refuses a dirty tracked source tree, records the exact source revision in `portfolio-build.json`, copies only referenced styles, fonts, public assets, the résumé, and search metadata, and generates a dedicated `noindex` 404 page. It rejects executable bundles, unsafe paths, local-only references, and missing content.
 
 ## Hosting configuration
 
