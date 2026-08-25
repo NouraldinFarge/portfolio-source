@@ -20,7 +20,7 @@ const sourceRepository = "https://github.com/NouraldinFarge/portfolio-source";
 async function resolveBuildMetadata() {
   const [{ stdout: revisionOutput }, { stdout: statusOutput }] = await Promise.all([
     execFileAsync("git", ["rev-parse", "HEAD"], { cwd: root }),
-    execFileAsync("git", ["status", "--porcelain", "--untracked-files=no"], { cwd: root }),
+    execFileAsync("git", ["status", "--porcelain=v1", "--untracked-files=all"], { cwd: root }),
   ]);
   const sourceRevision = revisionOutput.trim();
   const sourceTreeState = statusOutput.trim() ? "dirty" : "clean";
@@ -29,7 +29,7 @@ async function resolveBuildMetadata() {
     throw new Error(`Could not resolve a full source revision: ${sourceRevision}`);
   }
   if (requireClean && sourceTreeState !== "clean") {
-    throw new Error("Release export requires a clean tracked source tree.");
+    throw new Error("Release export requires a clean source tree with no non-ignored changes.");
   }
 
   return {

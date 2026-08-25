@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { access, mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { access, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -137,6 +137,38 @@ test("exports a self-contained GitHub Pages site", async () => {
     assert.match(researchStudioHtml, /rel="canonical" href="https:\/\/nouraldinfarge\.github\.io\/research-studio\/"/);
     assert.doesNotMatch(researchStudioHtml, /localhost|_rsc|Extensions_Programs|C:\\Users/i);
   } finally {
+    await rm(temporaryRoot, { recursive: true, force: true });
+  }
+});
+
+test("release export rejects an untracked public asset", async () => {
+  const temporaryRoot = await mkdtemp(path.join(tmpdir(), "nouraldin-portfolio-untracked-"));
+  const output = path.join(temporaryRoot, "site");
+  const sentinel = path.join(
+    root,
+    "public",
+    `.release-export-untracked-${process.pid}-${Date.now()}.txt`,
+  );
+
+  try {
+    await writeFile(sentinel, "untracked release input\n", "utf8");
+    const { stdout: sourceStatus } = await execFileAsync(
+      "git",
+      ["status", "--porcelain=v1", "--untracked-files=all", "--", sentinel],
+      { cwd: root },
+    );
+    assert.match(sourceStatus, /^\?\? /, "the regression sentinel must be visible to Git");
+
+    await assert.rejects(
+      execFileAsync(
+        process.execPath,
+        [path.join(root, "scripts", "export-github-pages.mjs"), "--require-clean", output],
+        { cwd: root },
+      ),
+      /Release export requires a clean source tree with no non-ignored changes/,
+    );
+  } finally {
+    await rm(sentinel, { force: true });
     await rm(temporaryRoot, { recursive: true, force: true });
   }
 });

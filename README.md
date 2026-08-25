@@ -59,7 +59,7 @@ To write the artifact into a separate Pages checkout:
 npm run export:pages:release -- ../NouraldinFarge.github.io
 ```
 
-The release exporter refuses a dirty tracked source tree, records the exact source revision in `portfolio-build.json`, copies only referenced styles, fonts, public assets, the résumé, and search metadata, and generates a dedicated `noindex` 404 page. Rendered HTML is parsed into a document tree before publication: streamed metadata is promoted structurally, only valid JSON-LD is retained, and runtime scripts, inline styles, templates, module preloads, active attributes, unsafe URLs, and embedded browsing contexts are removed or rejected. Adversarial transform tests cover malformed and repeated tags as well as ambiguous streamed fragments. The exporter also rejects executable bundles, unsafe paths, local-only references, and missing content.
+The release exporter refuses tracked or untracked non-ignored source changes, records the exact source revision in `portfolio-build.json`, copies only referenced styles, fonts, public assets, the résumé, and search metadata, and generates a dedicated `noindex` 404 page. Rendered HTML is parsed into a document tree before publication: streamed metadata is promoted structurally, only valid JSON-LD is retained, and runtime scripts, inline styles, templates, module preloads, active attributes, unsafe URLs, and embedded browsing contexts are removed or rejected. Adversarial transform tests cover malformed and repeated tags as well as ambiguous streamed fragments. The exporter also rejects executable bundles, unsafe paths, local-only references, and missing content.
 
 ## Deployment and media provenance
 
