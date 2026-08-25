@@ -6,6 +6,7 @@ import path from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
+import { assertStaticDocumentPolicy } from "../scripts/static-html.mjs";
 
 const execFileAsync = promisify(execFile);
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -60,16 +61,11 @@ test("exports a self-contained GitHub Pages site", async () => {
       /<head>[\s\S]*<title>Nouraldin Farge — React &amp; TypeScript Software Engineer<\/title>[\s\S]*<\/head>/,
     );
     for (const exportedPage of [indexHtml, researchStudioHtml]) {
-      const scripts = exportedPage.match(/<script\b[\s\S]*?<\/script>/gi) ?? [];
-      assert.equal(scripts.length, 1, "only the structured-data script may remain");
-      assert.match(scripts[0], /^<script type="application\/ld\+json">/i);
-      assert.doesNotMatch(exportedPage, /<template\b|data-vinext-streamed-icon/);
-      assert.doesNotMatch(
-        exportedPage,
-        /<div\b[^>]*\bhidden\b[^>]*>\s*<div\b[^>]*\bhidden\b[^>]*>\s*<(?:title|meta|link)\b/i,
-        "streamed metadata must be promoted into the document head",
-      );
+      const inspection = assertStaticDocumentPolicy(exportedPage);
+      assert.equal(inspection.scriptCount, 1, "only structured JSON-LD may remain");
+      assert.equal(inspection.structuredDataCount, 1);
     }
+    assertStaticDocumentPolicy(notFoundHtml, { requireStructuredData: false });
     assert.match(notFoundHtml, /<title>Page not found — Nouraldin Farge<\/title>/);
     assert.match(notFoundHtml, /content="noindex, follow"/);
     assert.match(notFoundHtml, />Return home<\/a>/);
